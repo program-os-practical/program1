@@ -1,0 +1,31 @@
+#define BLYNK_PRINT Serial
+
+#define BLYNK_TEMPLATE_ID "TMPL3r2HK6Fk-"
+#define BLYNK_TEMPLATE_NAME "Led"
+#define BLYNK_AUTH_TOKEN "njhQOvogTECuru2Wnk2vAzBUpc1viugt"
+
+
+#include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
+
+// Your WiFi credentials.
+// Set password to "" for open networks.
+char auth[] = BLYNK_AUTH_TOKEN;
+char ssid[] = "Anurag";
+char pass[] = "12345678";
+
+BLYNK_WRITE (V0){
+  digitalWrite(D0,param.asInt());
+}
+
+void setup()
+{
+ 
+  pinMode(D0,OUTPUT);
+  Blynk.begin(BLYNK_AUTH_TOKEN, ssid, pass,"blynk.cloud",80);
+}
+
+void loop()
+{
+  Blynk.run();
+}

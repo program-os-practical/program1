@@ -1,0 +1,52 @@
+#define BLYNK_TEMPLATE_ID "TMPL3LGGTBSli"
+#define BLYNK_TEMPLATE_NAME "soil"
+#define BLYNK_AUTH_TOKEN "yBFacysPPkcB9O_jXfLVceTyQzIYT2NQ"
+
+
+
+
+#define BLYNK_PRINT Serial
+#include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
+#include <DHT.h>
+
+// Your network credentials
+char ssid[] = "Anurag";   //your wifi name//
+char pass[] = "12345678";   //your wifi password//
+
+// Blynk template details
+
+
+// DHT sensor settings
+#define DHTPIN D6  // Pin where the DHT11 is connected
+#define DHTTYPE DHT11  // DHT 11
+DHT dht(DHTPIN, DHTTYPE);
+
+// Timer settings
+BlynkTimer timer;
+
+void sendSensor() {
+  float tC = dht.readTemperature(); // Read temperature in Celsius
+  float tF = dht.readTemperature(true); // Read temperature in Fahrenheit
+
+  if (isnan(tC) || isnan(tF)) {
+    Serial.println("Failed to read from DHT sensor!");
+    return;
+  }
+  Blynk.virtualWrite(V0, tC); // Temperature in Celsius to virtual pin V5 (Gauge)
+  Blynk.virtualWrite(V1, tF); // Temperature in Fahrenheit to virtual pin V6 (Label)
+}
+
+void setup() {
+  Serial.begin(9600);
+  Blynk.begin(BLYNK_AUTH_TOKEN, ssid, pass);
+  dht.begin();
+  
+  // Setup a function to be called every 2 seconds
+  timer.setInterval(2000L, sendSensor);
+}
+
+void loop() {
+  Blynk.run();
+  timer.run();
+}
